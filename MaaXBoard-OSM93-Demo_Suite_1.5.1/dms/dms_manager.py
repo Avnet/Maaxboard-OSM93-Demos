@@ -14,6 +14,7 @@ from dms.face_detection import FaceDetector
 from dms.eye_landmark import EyeMesher
 from dms.face_landmark import FaceMesher
 from dms.utils import *
+from dms.inference_timer import InferenceTimeLogger
 
 BAD_FACE_PENALTY = 0.01
 """ % to remove for far away face """
@@ -54,6 +55,7 @@ class DMSManager:
         self.inference_speed = None
         self.face_in_frame = False
         self.safe_value = 0
+        self.inference_logger = InferenceTimeLogger()
 
         model_selector = model_paths.NPU_MODELS if self.use_npu else model_paths.CPU_MODELS
 
@@ -112,7 +114,9 @@ class DMSManager:
         # face detection
         bboxes_decoded, landmarks, scores = self.face_detector.inference(padded)
 
-        self.inference_speed = "{:.2f}".format(delta)
+        self.inference_logger.calculate_total_model_averages()
+        model_avgs = self.inference_logger.get_models_inf_average()
+        self.inference_speed = "{:.2f}".format(model_avgs*1000)
 
         mesh_landmarks_inverse = []
         r_vecs, t_vecs = [], []

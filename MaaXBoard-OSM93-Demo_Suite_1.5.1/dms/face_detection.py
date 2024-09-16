@@ -7,7 +7,9 @@
 import math
 import cv2
 import numpy as np
+import time
 from dms.utils import nms_oneclass
+from dms.inference_timer import InferenceTimeLogger
 
 
 FACE_MODEL_3D = np.array([
@@ -31,6 +33,8 @@ class FaceDetector:
                  target_height=128,
                  run_on_hardware = False
                  ):
+        
+        self.inference_logger = InferenceTimeLogger()
         
         if run_on_hardware:
             import tflite_runtime.interpreter as tflite
@@ -79,7 +83,11 @@ class FaceDetector:
 
         # invoke
         self.interpreter.set_tensor(self.input_idx, input_data)
+        start = time.time()
         self.interpreter.invoke()
+        end = time.time()
+        delta = end-start
+        self.inference_logger.face_detection_inf_time = delta
         scores = self.interpreter.get_tensor(self.outputs_idx['classificators']).squeeze()
         scores = 1 / (1 + np.exp(-scores))
         bboxes = self.interpreter.get_tensor(self.outputs_idx['regressors']).squeeze()
