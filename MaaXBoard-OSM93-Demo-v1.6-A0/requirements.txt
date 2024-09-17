@@ -1,6 +1,6 @@
 # This is the main set of dependencies for the project
 ##
-## DO NOT OVERWRITE TFLITE_RUNTIME
+## DO NOT OVERWRITE TFLITE_RUNTIME - it is compiled within the image & setup for hardware.
 ##
 ELM327-emulator==3.0.0
 matplotlib==3.7.2
