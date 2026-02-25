@@ -27,7 +27,7 @@ Tria developed application suite to explore funtionality of the MaaXBoard OSM93.
 ## Installation
 1. Clone the repository to your MaaXBoard OSM93:
     ```bash
-    git clone 
+    git clone https://github.com/Avnet/Maaxboard-OSM93-Demos.git
     ```
 
 2. Change access permissions to setup.sh shell script:
